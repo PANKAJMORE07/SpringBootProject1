@@ -5,6 +5,9 @@ import java.util.Optional;
 
 import javax.management.RuntimeErrorException;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +24,10 @@ public class BookService {
 	@Autowired
 	BookRepository BookRepo;
 	
+	
+	//Logger
+	private Logger logger = LoggerFactory.getLogger(BookService.class);
+	
 	//without DTO
 //	public Book saveBook(Book book) {
 //		return BookRepo.save(book);
@@ -28,35 +35,43 @@ public class BookService {
 	
 	
 	//with DTO
-	public addBookDTO saveBook(addBookDTO bookDTO) {
+	public responceBookDTO saveBook(addBookDTO bookDTO) {
 		
+		//System.out.println("Book Is Added");
+		logger.info("Book Is Added");
+		 
 		Book book = MapToEntity(bookDTO);
 		
 		Book savedBook = BookRepo.save(book);
 		
-		return bookDTO;
+		return MapToDTO(savedBook);
     }
 	
 	
-	public List<Book> getAllBooks(){
+	public List<responceBookDTO> getAllBooks(){
 		
 		List<Book> books =  BookRepo.findAll();
 		if(books.isEmpty()) {
 			throw new BookNotFound("Book Table Is Empty");
 		}
 		
-		
-		return books;
+		return books.stream().map(this :: MapToDTO).toList();
 	}
 	
 	
-	public Book getBookbyId(Long id) {
-		return BookRepo.findById(id)
+	public responceBookDTO getBookbyId(Long id) {
+		Book book =  BookRepo.findById(id)
 				.orElseThrow(() -> new BookNotFound("Book Not Found with id: " + id));
+		
+		return MapToDTO(book);
 	}
 	
 	
-	public Book updateBook(Long id, Book newBook) {
+	
+	public responceBookDTO updateBook(Long id, addBookDTO newBookDTO) {
+		
+		Book newBook = MapToEntity(newBookDTO);
+		
 		Book oldBook = BookRepo.findById(id)
 					   .orElseThrow(() -> new BookNotFound("Book Not Found with id: " + id));
 		
@@ -65,18 +80,20 @@ public class BookService {
 		oldBook.setAvailableCopies(newBook.getAvailableCopies());
 		oldBook.setIsbn(newBook.getIsbn());
 		
-		BookRepo.save(oldBook);
-		return oldBook;
+		Book savedBook = BookRepo.save(oldBook);
+		
+		return MapToDTO(savedBook);
 	}
 	
 	
-	public Book deleteBook(Long id) {
+	public responceBookDTO deleteBook(Long id) {
 		
 		Book book = BookRepo.findById(id)
 				.orElseThrow(() -> new BookNotFound("Book Not Found with id: " + id));
 		
 		BookRepo.delete(book);
-		return book;
+		
+		return MapToDTO(book);
 	}
 	
 	

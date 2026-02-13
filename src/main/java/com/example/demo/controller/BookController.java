@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.addBookDTO;
+import com.example.demo.dto.responceBookDTO;
 import com.example.demo.model.Book;
 import com.example.demo.service.BookService;
 
@@ -29,30 +31,30 @@ public class BookController {
 	BookService BookServ;
 	
 	@GetMapping("/all")
-	public List<Book> getAllBooks() {
+	public List<responceBookDTO> getAllBooks() {
 		return BookServ.getAllBooks();
 	}
 	
 	
 	@GetMapping("/one/{id}")
-	public Book getBookById(@PathVariable Long id) {
+	public responceBookDTO getBookById(@PathVariable Long id) {
 		return BookServ.getBookbyId(id);
 	}
 
 	
 	@PostMapping("/add")
-	public Book addBook(@Valid @RequestBody Book book) {
+	public responceBookDTO addBook(@Valid @RequestBody addBookDTO book) {
 		return BookServ.saveBook(book);
 	}
 	
 	
 	@PutMapping("/update")
-	public Book updateBook(@Valid @RequestParam Long id, @RequestBody Book book) {
+	public responceBookDTO updateBook(@RequestParam Long id, @Valid @RequestBody addBookDTO book) {
 		return BookServ.updateBook(id, book);
 	}
 	
 	@DeleteMapping("/delete/{id}")
-	public Book deleteBook(@PathVariable Long id) {
+	public responceBookDTO deleteBook(@PathVariable Long id) {
 		return BookServ.deleteBook(id);
 	}
 	
