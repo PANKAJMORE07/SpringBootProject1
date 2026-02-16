@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.dto.addBookDTO;
-import com.example.demo.dto.responceBookDTO;
+import com.example.demo.dto.AddBookDTO;
+import com.example.demo.dto.ResponceBookDTO;
 import com.example.demo.model.Book;
 import com.example.demo.service.BookService;
 
@@ -31,30 +31,30 @@ public class BookController {
 	BookService BookServ;
 	
 	@GetMapping("/all")
-	public List<responceBookDTO> getAllBooks() {
+	public List<ResponceBookDTO> getAllBooks() {
 		return BookServ.getAllBooks();
 	}
 	
 	
 	@GetMapping("/one/{id}")
-	public responceBookDTO getBookById(@PathVariable Long id) {
+	public ResponceBookDTO getBookById(@PathVariable Long id) {
 		return BookServ.getBookbyId(id);
 	}
 
 	
 	@PostMapping("/add")
-	public responceBookDTO addBook(@Valid @RequestBody addBookDTO book) {
+	public ResponceBookDTO addBook(@Valid @RequestBody AddBookDTO book) {
 		return BookServ.saveBook(book);
 	}
 	
 	
 	@PutMapping("/update")
-	public responceBookDTO updateBook(@RequestParam Long id, @Valid @RequestBody addBookDTO book) {
+	public ResponceBookDTO updateBook(@RequestParam Long id, @Valid @RequestBody AddBookDTO book) {
 		return BookServ.updateBook(id, book);
 	}
 	
 	@DeleteMapping("/delete/{id}")
-	public responceBookDTO deleteBook(@PathVariable Long id) {
+	public ResponceBookDTO deleteBook(@PathVariable Long id) {
 		return BookServ.deleteBook(id);
 	}
 	
@@ -66,5 +66,19 @@ public class BookController {
 		
 		return ResponseEntity
 				.ok("Books deleted Successfully");
+	}
+	
+	@GetMapping("/search/title")
+	public List<ResponceBookDTO> searchByTitle(@RequestParam String title) {
+		
+	        return BookServ.searchByTitle(title);
+
+	}
+	
+	@GetMapping("/search/author")
+	public List<ResponceBookDTO> searchByAuthor(@RequestParam String author) {
+
+	    return BookServ.searchByAuthor(author);
+
 	}
 }

@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.dto.addBookDTO;
-import com.example.demo.dto.responceBookDTO;
+import com.example.demo.dto.AddBookDTO;
+import com.example.demo.dto.ResponceBookDTO;
 import com.example.demo.exception.BookNotFound;
 import com.example.demo.model.Book;
 import com.example.demo.repository.BookRepository;
@@ -35,7 +35,7 @@ public class BookService {
 	
 	
 	//with DTO
-	public responceBookDTO saveBook(addBookDTO bookDTO) {
+	public ResponceBookDTO saveBook(AddBookDTO bookDTO) {
 		
 		//System.out.println("Book Is Added");
 		logger.info("Book Is Added");
@@ -48,7 +48,7 @@ public class BookService {
     }
 	
 	
-	public List<responceBookDTO> getAllBooks(){
+	public List<ResponceBookDTO> getAllBooks(){
 		
 		List<Book> books =  BookRepo.findAll();
 		if(books.isEmpty()) {
@@ -59,7 +59,7 @@ public class BookService {
 	}
 	
 	
-	public responceBookDTO getBookbyId(Long id) {
+	public ResponceBookDTO getBookbyId(Long id) {
 		Book book =  BookRepo.findById(id)
 				.orElseThrow(() -> new BookNotFound("Book Not Found with id: " + id));
 		
@@ -68,7 +68,7 @@ public class BookService {
 	
 	
 	
-	public responceBookDTO updateBook(Long id, addBookDTO newBookDTO) {
+	public ResponceBookDTO updateBook(Long id, AddBookDTO newBookDTO) {
 		
 		Book newBook = MapToEntity(newBookDTO);
 		
@@ -86,7 +86,7 @@ public class BookService {
 	}
 	
 	
-	public responceBookDTO deleteBook(Long id) {
+	public ResponceBookDTO deleteBook(Long id) {
 		
 		Book book = BookRepo.findById(id)
 				.orElseThrow(() -> new BookNotFound("Book Not Found with id: " + id));
@@ -109,7 +109,7 @@ public class BookService {
 	
 	//DTO Mapping
 	
-	private Book MapToEntity(addBookDTO dto) {
+	private Book MapToEntity(AddBookDTO dto) {
 		Book book = new Book();
 		
 		book.setTitle(dto.getTitle());
@@ -121,8 +121,8 @@ public class BookService {
 	}
 	
 	
-	private responceBookDTO MapToDTO(Book book) {
-		responceBookDTO dto = new responceBookDTO();
+	private ResponceBookDTO MapToDTO(Book book) {
+		ResponceBookDTO dto = new ResponceBookDTO();
 		
 		dto.setId(book.getId());
 		dto.setTitle(book.getTitle());
@@ -131,5 +131,30 @@ public class BookService {
 		dto.setAvailableCopies(book.getAvailableCopies());
 		
 		return dto;
+	}
+	
+	
+	public List<ResponceBookDTO> searchByTitle(String title) {
+
+	    List<Book> list = BookRepo.findByTitle(title);
+
+	    if(list.isEmpty())
+	        throw new BookNotFound("No books found with title: " + title);
+
+	    return list.stream()
+	            .map(this::MapToDTO)
+	            .toList();
+	}
+
+	public List<ResponceBookDTO> searchByAuthor(String author) {
+
+	    List<Book> list = BookRepo.findByAuthor(author);
+
+	    if(list.isEmpty())
+	        throw new BookNotFound("No books found with author: " + author);
+
+	    return list.stream()
+	            .map(this::MapToDTO)
+	            .toList();
 	}
 }

@@ -3,7 +3,7 @@ package com.example.demo.dto;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 
-public class addBookDTO {
+public class AddBookDTO {
 		
 		@NotBlank(message = "Title is required")
 		private String title;

@@ -1,6 +1,6 @@
 package com.example.demo.dto;
 
-public class responceBookDTO {
+public class ResponceBookDTO {
 
 	private long id;
 	private String title;
