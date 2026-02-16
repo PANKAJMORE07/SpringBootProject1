@@ -26,10 +26,9 @@ public class Borrowing {
 	@JoinColumn(name = "member_id", nullable = false)
 	private Member member;
 	
-	@Column(nullable = false)
+	
 	private LocalDate borrowDate;
 	
-	@Column(nullable = false)
 	private LocalDate returnDate;
 
 	public long getId() {
