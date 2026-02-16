@@ -38,11 +38,14 @@ public class BookService {
 	public ResponceBookDTO saveBook(AddBookDTO bookDTO) {
 		
 		//System.out.println("Book Is Added");
-		logger.info("Book Is Added");
+		logger.info("Book adding......");
 		 
 		Book book = MapToEntity(bookDTO);
 		
 		Book savedBook = BookRepo.save(book);
+		
+		//System.out.println("Book Is Added");
+		logger.info("Book Is Added");
 		
 		return MapToDTO(savedBook);
     }
